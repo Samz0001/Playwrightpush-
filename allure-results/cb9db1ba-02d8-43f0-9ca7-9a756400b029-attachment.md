@@ -1,0 +1,137 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - link "About" [ref=e4] [cursor=pointer]:
+        - /url: https://about.google/?fg=1&utm_source=google-IN&utm_medium=referral&utm_campaign=hp-header
+      - link "Store" [ref=e5] [cursor=pointer]:
+        - /url: https://store.google.com/IN?utm_source=hp_header&utm_medium=google_ooo&utm_campaign=GS100042&hl=en-IN
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - link "Gmail" [ref=e10] [cursor=pointer]:
+            - /url: https://mail.google.com/mail/&ogbl
+          - link "Search for Images" [ref=e12] [cursor=pointer]:
+            - /url: https://www.google.com/imghp?hl=en&ogbl
+            - text: Images
+        - button "Google apps" [ref=e15] [cursor=pointer]:
+          - img [ref=e16] [cursor=pointer]
+        - link "Sign in" [ref=e20] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/&ec=futura_exp_og_so_72776762_e
+          - generic [ref=e21] [cursor=pointer]: Sign in
+    - img "Google" [ref=e24]
+    - search [ref=e32]:
+      - generic [ref=e34]:
+        - generic [ref=e36]:
+          - img [ref=e40]
+          - combobox "Search" [expanded] [ref=e43]:
+            - text: playwright
+            - listbox [ref=e45]:
+              - option "playwright" [ref=e49]:
+                - generic [ref=e50]: playwright
+              - option "playwright automation" [ref=e54]:
+                - generic [ref=e55]:
+                  - text: playwright
+                  - generic [ref=e56]: automation
+              - option "playwright mcp" [ref=e60]:
+                - generic [ref=e61]:
+                  - text: playwright
+                  - generic [ref=e62]: mcp
+              - option "playwright mcp server" [ref=e66]:
+                - generic [ref=e67]:
+                  - text: playwright
+                  - generic [ref=e68]: mcp server
+              - option "playwright meaning in hindi" [ref=e72]:
+                - generic [ref=e73]:
+                  - text: playwright
+                  - generic [ref=e74]: meaning in hindi
+              - option "playwright documentation" [ref=e78]:
+                - generic [ref=e79]:
+                  - text: playwright
+                  - generic [ref=e80]: documentation
+              - option "playwright interview questions" [ref=e84]:
+                - generic [ref=e85]:
+                  - text: playwright
+                  - generic [ref=e86]: interview questions
+              - option "playwright meaning" [ref=e90]:
+                - generic [ref=e91]:
+                  - text: playwright
+                  - generic [ref=e92]: meaning
+              - option "playwright vs selenium" [ref=e96]:
+                - generic [ref=e97]:
+                  - text: playwright
+                  - generic [ref=e98]: vs selenium
+              - option "playwright tutorial" [ref=e102]:
+                - generic [ref=e103]:
+                  - text: playwright
+                  - generic [ref=e104]: tutorial
+          - generic [ref=e105]:
+            - button "Clear" [ref=e107] [cursor=pointer]:
+              - img [ref=e109] [cursor=pointer]
+            - generic [ref=e112]:
+              - button "Search by voice" [ref=e113] [cursor=pointer]:
+                - img [ref=e114] [cursor=pointer]
+              - button "Search by image" [ref=e116] [cursor=pointer]:
+                - img [ref=e117] [cursor=pointer]
+            - link "AI Mode" [ref=e119] [cursor=pointer]:
+              - generic [ref=e121] [cursor=pointer]:
+                - img [ref=e123] [cursor=pointer]
+                - generic [ref=e130] [cursor=pointer]: AI Mode
+        - generic [ref=e131]:
+          - generic [ref=e135]:
+            - button "Google Search" [ref=e136] [cursor=pointer]
+            - button "I'm Feeling Lucky" [ref=e137] [cursor=pointer]
+          - button "Report inappropriate predictions" [ref=e138] [cursor=pointer]:
+            - generic [ref=e139] [cursor=pointer]: Report inappropriate predictions
+        - generic [ref=e141]:
+          - button "Google Search" [ref=e142] [cursor=pointer]
+          - button "I'm Feeling Lucky" [ref=e143] [cursor=pointer]
+    - generic [ref=e146]:
+      - text: "Google offered in:"
+      - link "हिन्दी" [ref=e147] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=hi&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCBg
+      - link "বাংলা" [ref=e148] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=bn&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCBk
+      - link "తెలుగు" [ref=e149] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=te&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCBo
+      - link "मराठी" [ref=e150] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=mr&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCBs
+      - link "தமிழ்" [ref=e151] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=ta&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCBw
+      - link "ગુજરાતી" [ref=e152] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=gu&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCB0
+      - link "ಕನ್ನಡ" [ref=e153] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=kn&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCB4
+      - link "മലയാളം" [ref=e154] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=ml&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCB8
+      - link "ਪੰਜਾਬੀ" [ref=e155] [cursor=pointer]:
+        - /url: https://www.google.com/setprefs?sig=0_6SiSblYZ_MjBK10aNvujIWAqqzY%3D&hl=pa&source=homepage&sa=X&ved=0ahUKEwj4zry1oPyPAxWSUGwGHe1_Lv4Q2ZgBCCA
+    - contentinfo [ref=e157]:
+      - generic [ref=e158]: India
+      - generic [ref=e159]:
+        - generic [ref=e160]:
+          - link "Advertising" [ref=e161] [cursor=pointer]:
+            - /url: https://www.google.com/intl/en_in/ads/?subid=ww-ww-et-g-awa-a-g_hpafoot1_1!o2&utm_source=google.com&utm_medium=referral&utm_campaign=google_hpafooter&fg=1
+          - link "Business" [ref=e162] [cursor=pointer]:
+            - /url: https://www.google.com/services/?subid=ww-ww-et-g-awa-a-g_hpbfoot1_1!o2&utm_source=google.com&utm_medium=referral&utm_campaign=google_hpbfooter&fg=1
+          - link "How Search works" [ref=e163] [cursor=pointer]:
+            - /url: https://google.com/search/howsearchworks/?fg=1
+        - generic [ref=e164]:
+          - link "Privacy" [ref=e165] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy?hl=en-IN&fg=1
+          - link "Terms" [ref=e166] [cursor=pointer]:
+            - /url: https://policies.google.com/terms?hl=en-IN&fg=1
+          - button "Settings" [ref=e170] [cursor=pointer]:
+            - generic [ref=e171] [cursor=pointer]: Settings
+  - generic:
+    - dialog "Choose Chrome, the browser built by Google":
+      - generic [ref=e180]:
+        - generic [ref=e181]: Choose Chrome, the browser built by Google
+        - generic [ref=e182]: Try a fast, secure browser with automatic updates
+        - generic [ref=e183]:
+          - button "Not interested" [ref=e185] [cursor=pointer]:
+            - generic [ref=e189] [cursor=pointer]: Not interested
+          - button "Try it" [ref=e191] [cursor=pointer]:
+            - generic [ref=e195] [cursor=pointer]: Try it
+```
