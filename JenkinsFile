@@ -30,7 +30,7 @@ pipeline {
                 stage('Example Test 2') {
                     steps {
                         dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                            bat 'npx playwright test example.spec.js --headed'
+                            bat 'npx playwright test sample.spec.js --headed'
                         }
                     }
                 }
