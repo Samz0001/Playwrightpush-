@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    environment {
+        // Add Node and npm paths for the Jenkins SYSTEM user
+        PATH = "${PATH};C:\\Users\\shyam\\AppData\\Roaming\\npm"
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                echo 'Setting up environment...'
+                dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
+                    bat 'npm install'
+                    bat 'npx playwright install'
+                }
+            }
+        }
+
+        stage('Run Tests in Parallel') {
+            parallel {
+                stage('Google Test') {
+                    steps {
+                        dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
+                            bat 'npx playwright test google.spec.js --headed'
+                        }
+                    }
+                }
+
+                stage('Example Test 2') {
+                    steps {
+                        dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
+                            bat 'npx playwright test example.spec.js --headed'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up workspace...'
+            cleanWs()
+        }
+    }
+}
