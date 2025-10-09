@@ -16,7 +16,7 @@ COPY . .
 # Install all Playwright browsers + dependencies
 RUN npx playwright install --with-deps
 
-
+EXPOSE 9000-9999
 
 # Run Playwright tests automatically when container starts
 CMD ["npx", "playwright", "test", "--reporter=html"]
