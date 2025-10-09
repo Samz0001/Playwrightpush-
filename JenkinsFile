@@ -13,7 +13,6 @@ pipeline {
             steps {
                 script {
                     echo "🐳 Building Playwright Docker image..."
-                    // Ensure Dockerfile exists
                     bat '''
                         if exist Dockerfile (
                             docker build -t playwright-tests .
