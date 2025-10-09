@@ -17,16 +17,17 @@ pipeline {
             }
         }
 
-        stage('Run Tests in Docker') {
+        stage('Run Playwright Tests in Docker') {
             steps {
                 script {
                     echo "Running tests inside Playwright Docker container..."
+                    // Mount the current Jenkins workspace so report files are accessible
                     bat "docker run --rm -v %cd%\\playwright-report:/app/playwright-report playwright-tests"
                 }
             }
         }
 
-        stage('Example Test 2') {
+        stage('Example Test 2 (Optional Local Test)') {
             steps {
                 dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
                     bat 'npx playwright test sample.spec.js --headed'
@@ -37,6 +38,20 @@ pipeline {
 
     post {
         always {
+            echo "Publishing Playwright HTML Report..."
+            // ✅ Publish HTML report to Jenkins
+            publishHTML(target: [
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright HTML Report',
+                keepAll: true,
+                alwaysLinkToLastBuild: true,
+                allowMissing: false
+            ])
+
+            echo "Archiving Playwright Report..."
+            archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true
+
             echo "Cleaning up workspace..."
             cleanWs()
         }
