@@ -26,23 +26,11 @@ pipeline {
             }
         }
 
-<<<<<<< HEAD
-        stage('Publish Report') {
+        stage('Example Test 2') {
             steps {
-                publishHTML(target: [
-                    reportName : 'Playwright Report',
-                    reportDir  : 'playwright-report',
-                    reportFiles: 'index.html'
-                ])
-=======
-                stage('Example Test 2') {
-                    steps {
-                        dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                            bat 'npx playwright test sample.spec.js --headed'
-                        }
-                    }
+                dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
+                    bat 'npx playwright test sample.spec.js --headed'
                 }
->>>>>>> 0ed61ab039eb9e4cf2d4251b2c345cb2d13c4d87
             }
         }
     }
