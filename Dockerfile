@@ -20,6 +20,6 @@ RUN npx playwright install --with-deps
 EXPOSE 9323
 
 # Run Playwright tests automatically when container starts
-CMD ["npx", "playwright", "test", "--reporter=html", "--headed"]
+CMD ["npx", "playwright", "test", "--reporter=html"]
 
 ######
