@@ -44,11 +44,24 @@ pipeline {
 
     post {
         always {
-            echo "🧹 Cleaning up workspace but keeping Playwright report..."
+            echo "📊 Publishing Playwright HTML report..."
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright Test Report'
+            ])
+
+            echo "🧹 Cleaning up workspace but keeping archived report..."
             script {
                 try {
-                    // Exclude the HTML report folder from deletion
-                    cleanWs notFailBuild: true, deleteDirs: true, patterns: [[pattern: 'playwright-report/**', type: 'EXCLUDE']]
+                    cleanWs(
+                        notFailBuild: true,
+                        deleteDirs: true,
+                        patterns: [[pattern: 'playwright-report/**', type: 'EXCLUDE']]
+                    )
                 } catch (Exception e) {
                     echo "⚠️ Warning: workspace cleanup failed, ignoring..."
                 }
