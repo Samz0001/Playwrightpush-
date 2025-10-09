@@ -57,7 +57,13 @@ pipeline {
             ])
 
             echo "🧹 Cleaning up workspace..."
-            cleanWs()
+            script {
+                try {
+                    cleanWs()
+                } catch (Exception e) {
+                    echo "⚠️ Warning: workspace cleanup failed, ignoring..."
+                }
+            }
         }
     }
 }
