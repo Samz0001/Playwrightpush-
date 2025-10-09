@@ -1,11 +1,10 @@
 pipeline {
-    // Assumes your Jenkins agent has Docker installed and can run 'bat' commands (Windows agent)
     agent any
 
     stages {
         stage('Checkout Code') {
             steps {
-                echo "Checking out code from Git..."
+                echo "📦 Checking out code from Git..."
                 git branch: 'main', url: 'https://github.com/Samz0001/Playwrightpush-.git'
             }
         }
@@ -13,9 +12,16 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Playwright Docker image..."
-                    // Builds the image based on the Dockerfile in the workspace root
-                    bat "docker build -t playwright-tests ." 
+                    echo "🐳 Building Playwright Docker image..."
+                    // Ensure Dockerfile exists
+                    bat '''
+                        if exist Dockerfile (
+                            docker build -t playwright-tests .
+                        ) else (
+                            echo "❌ Dockerfile not found in workspace root!"
+                            exit /b 1
+                        )
+                    '''
                 }
             }
         }
@@ -23,19 +29,14 @@ pipeline {
         stage('Run Playwright Tests in Docker') {
             steps {
                 script {
-                    echo "Running tests inside Playwright Docker container..."
-                    // Correct execution for Windows agent running a Linux container:
-                    // - "%WORKSPACE%" is used for Windows variable substitution.
-                    // - -v "%WORKSPACE%":/app mounts project files to /app inside the container.
-                    // - --ipc=host is crucial for Chromium stability in Docker.
-                    // - "npm ci" performs a clean install using package-lock.json.
+                    echo "🧪 Running Playwright tests inside Docker container..."
                     bat """
                         docker run --rm ^
                         --ipc=host ^
                         -e CI=true ^
                         -v "%WORKSPACE%":/app ^
                         -w /app ^
-                        playwright-tests /bin/sh -c "npm ci && npx playwright test"
+                        playwright-tests /bin/bash -c "npm ci && npx playwright test --reporter=html"
                     """
                 }
             }
@@ -44,23 +45,19 @@ pipeline {
 
     post {
         always {
-            echo "--- Publishing Reports ---"
-            
-            // 1. Publish Playwright HTML Report (Requires HTML Publisher Plugin)
+            echo "📊 --- Publishing Playwright Reports ---"
+
+            // Publish Playwright HTML Report (Requires HTML Publisher Plugin)
             publishHTML(target: [
                 reportDir: 'playwright-report',
                 reportFiles: 'index.html',
-                reportName: 'Playwright HTML Report',
+                reportName: 'Playwright Test Report',
                 keepAll: true,
                 alwaysLinkToLastBuild: true,
-                allowMissing: false
+                allowMissing: true
             ])
-            
-            echo "--- Archiving Artifacts ---"
-            // Archive the HTML report, along with Playwright media (traces, videos, screenshots)
-            archiveArtifacts artifacts: 'playwright-report/**, test-results/**', fingerprint: true
 
-            echo "Cleaning up workspace..."
+            echo "🧹 Cleaning up workspace..."
             cleanWs()
         }
     }
