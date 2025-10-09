@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
+                // Assuming 'main' is the correct branch and URL
                 git branch: 'main', url: 'https://github.com/Samz0001/Playwrightpush-.git'
             }
         }
@@ -12,7 +13,9 @@ pipeline {
             steps {
                 script {
                     echo "Building Playwright Docker image..."
-                    bat "docker build -t playwright-tests ."
+                    // Assuming Dockerfile is in the root of the workspace
+                    // Use 'sh' if the Jenkins agent is Linux-based, 'bat' if Windows-based
+                    bat "docker build -t playwright-tests ." 
                 }
             }
         }
@@ -21,25 +24,29 @@ pipeline {
             steps {
                 script {
                     echo "Running tests inside Playwright Docker container..."
-                    // Mount the current Jenkins workspace so report files are accessible
-                    bat "docker run --rm -v %cd%\\playwright-report:/app/playwright-report playwright-tests"
+                    // 🚨 CRITICAL FIX: The command must mount the ENTIRE workspace and execute the 'npx playwright test' command.
+                    // -e CI=true: This tells Playwright to use the CI settings (headless, 'open: never').
+                    // -v ${WORKSPACE}:/app: This mounts the entire Jenkins workspace to the container's '/app' folder.
+                    // /bin/sh -c "...": Executes the test command within the container.
+                    bat """
+                        docker run --rm ^
+                        -e CI=true ^
+                        -v "${WORKSPACE}":/app ^
+                        playwright-tests /bin/sh -c "npm install && npx playwright test"
+                    """
+                    
+                    // Note: If your agent is Linux, replace 'bat' with 'sh' and remove '^' line continuations.
                 }
             }
         }
 
-        stage('Example Test 2 (Optional Local Test)') {
-            steps {
-                dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                    bat 'npx playwright test sample.spec.js --headed'
-                }
-            }
-        }
+        // Removed 'Example Test 2' since it refers to a specific local path which won't work in CI
     }
 
     post {
         always {
             echo "Publishing Playwright HTML Report..."
-            // ✅ Publish HTML report to Jenkins
+            // ✅ Publish HTML report to Jenkins (requires HTML Publisher Plugin)
             publishHTML(target: [
                 reportDir: 'playwright-report',
                 reportFiles: 'index.html',
@@ -48,9 +55,16 @@ pipeline {
                 alwaysLinkToLastBuild: true,
                 allowMissing: false
             ])
+            
+            echo "Publishing Allure Report..."
+            // 🚨 NEW STEP: Publish Allure report (requires Allure Plugin)
+            // Assumes allure results are in 'allure-results' folder
+            allure report: 'allure-results', source: 'allure-results', includeProperties: true, cleanResults: true
+            
 
-            echo "Archiving Playwright Report..."
-            archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true
+            echo "Archiving Playwright Artifacts (traces, videos, screenshots)..."
+            // Archive the entire reports directory for download/inspection
+            archiveArtifacts artifacts: 'playwright-report/**, allure-results/**', fingerprint: true
 
             echo "Cleaning up workspace..."
             cleanWs()
