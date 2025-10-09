@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                // Assuming 'main' is the correct branch and URL
                 git branch: 'main', url: 'https://github.com/Samz0001/Playwrightpush-.git'
             }
         }
@@ -13,8 +12,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Playwright Docker image..."
-                    // Assuming Dockerfile is in the root of the workspace
-                    // Use 'sh' if the Jenkins agent is Linux-based, 'bat' if Windows-based
+                    // Use 'bat' for Windows agent
                     bat "docker build -t playwright-tests ." 
                 }
             }
@@ -24,29 +22,25 @@ pipeline {
             steps {
                 script {
                     echo "Running tests inside Playwright Docker container..."
-                    // 🚨 CRITICAL FIX: The command must mount the ENTIRE workspace and execute the 'npx playwright test' command.
-                    // -e CI=true: This tells Playwright to use the CI settings (headless, 'open: never').
-                    // -v ${WORKSPACE}:/app: This mounts the entire Jenkins workspace to the container's '/app' folder.
-                    // /bin/sh -c "...": Executes the test command within the container.
+                    // FIX 1: Using "%WORKSPACE%" for Windows bat env variable.
+                    // IMPROVEMENT: Added --ipc=host for stability and used 'npm ci'.
                     bat """
                         docker run --rm ^
+                        --ipc=host ^
                         -e CI=true ^
-                        -v "${WORKSPACE}":/app ^
-                        playwright-tests /bin/sh -c "npm install && npx playwright test"
+                        -v "%WORKSPACE%":/app ^
+                        -w /app ^
+                        playwright-tests /bin/sh -c "npm ci && npx playwright test"
                     """
-                    
-                    // Note: If your agent is Linux, replace 'bat' with 'sh' and remove '^' line continuations.
                 }
             }
         }
-
-        // Removed 'Example Test 2' since it refers to a specific local path which won't work in CI
     }
 
     post {
         always {
             echo "Publishing Playwright HTML Report..."
-            // ✅ Publish HTML report to Jenkins (requires HTML Publisher Plugin)
+            // Requires HTML Publisher Plugin
             publishHTML(target: [
                 reportDir: 'playwright-report',
                 reportFiles: 'index.html',
@@ -57,14 +51,16 @@ pipeline {
             ])
             
             echo "Publishing Allure Report..."
-            // 🚨 NEW STEP: Publish Allure report (requires Allure Plugin)
-            // Assumes allure results are in 'allure-results' folder
-            allure report: 'allure-results', source: 'allure-results', includeProperties: true, cleanResults: true
+            // FIX 2: Corrected Allure syntax. Removed invalid 'report', 'source', and 'cleanResults'.
+            // Requires Allure Jenkins Plugin
+            allure([
+                results: [[path: 'allure-results']], // Correct parameter for results directory
+                includeProperties: true             // Supported optional parameter
+            ])
             
-
             echo "Archiving Playwright Artifacts (traces, videos, screenshots)..."
-            // Archive the entire reports directory for download/inspection
-            archiveArtifacts artifacts: 'playwright-report/**, allure-results/**', fingerprint: true
+            // IMPROVEMENT: Added 'test-results/**' to archive videos and traces correctly.
+            archiveArtifacts artifacts: 'playwright-report/**, allure-results/**, test-results/**', fingerprint: true
 
             echo "Cleaning up workspace..."
             cleanWs()
