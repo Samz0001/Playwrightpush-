@@ -1,9 +1,11 @@
 pipeline {
+    // Assumes your Jenkins agent has Docker installed and can run 'bat' commands (Windows agent)
     agent any
 
     stages {
         stage('Checkout Code') {
             steps {
+                echo "Checking out code from Git..."
                 git branch: 'main', url: 'https://github.com/Samz0001/Playwrightpush-.git'
             }
         }
@@ -12,7 +14,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Playwright Docker image..."
-                    // Use 'bat' for Windows agent
+                    // Builds the image based on the Dockerfile in the workspace root
                     bat "docker build -t playwright-tests ." 
                 }
             }
@@ -22,8 +24,11 @@ pipeline {
             steps {
                 script {
                     echo "Running tests inside Playwright Docker container..."
-                    // FIX 1: Using "%WORKSPACE%" for Windows bat env variable.
-                    // IMPROVEMENT: Added --ipc=host for stability and used 'npm ci'.
+                    // Correct execution for Windows agent running a Linux container:
+                    // - "%WORKSPACE%" is used for Windows variable substitution.
+                    // - -v "%WORKSPACE%":/app mounts project files to /app inside the container.
+                    // - --ipc=host is crucial for Chromium stability in Docker.
+                    // - "npm ci" performs a clean install using package-lock.json.
                     bat """
                         docker run --rm ^
                         --ipc=host ^
@@ -39,8 +44,9 @@ pipeline {
 
     post {
         always {
-            echo "Publishing Playwright HTML Report..."
-            // Requires HTML Publisher Plugin
+            echo "--- Publishing Reports ---"
+            
+            // 1. Publish Playwright HTML Report (Requires HTML Publisher Plugin)
             publishHTML(target: [
                 reportDir: 'playwright-report',
                 reportFiles: 'index.html',
@@ -50,17 +56,9 @@ pipeline {
                 allowMissing: false
             ])
             
-            echo "Publishing Allure Report..."
-            // FIX 2: Corrected Allure syntax. Removed invalid 'report', 'source', and 'cleanResults'.
-            // Requires Allure Jenkins Plugin
-            allure([
-                results: [[path: 'allure-results']], // Correct parameter for results directory
-                includeProperties: true             // Supported optional parameter
-            ])
-            
-            echo "Archiving Playwright Artifacts (traces, videos, screenshots)..."
-            // IMPROVEMENT: Added 'test-results/**' to archive videos and traces correctly.
-            archiveArtifacts artifacts: 'playwright-report/**, allure-results/**, test-results/**', fingerprint: true
+            echo "--- Archiving Artifacts ---"
+            // Archive the HTML report, along with Playwright media (traces, videos, screenshots)
+            archiveArtifacts artifacts: 'playwright-report/**, test-results/**', fingerprint: true
 
             echo "Cleaning up workspace..."
             cleanWs()
