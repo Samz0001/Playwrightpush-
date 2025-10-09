@@ -1,46 +1,45 @@
 pipeline {
     agent any
 
-    environment {
-        // Add Node and npm paths for the Jenkins SYSTEM user
-        PATH = "${PATH};C:\\Users\\shyam\\AppData\\Roaming\\npm"
-    }
-
     stages {
-        stage('Setup') {
+        stage('Checkout Code') {
             steps {
-                echo 'Setting up environment...'
-                dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                    bat 'npm install'
-                    bat 'npx playwright install'
+                git branch: 'main', url: 'https://github.com/Samz0001/Playwrightpush-.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Playwright Docker image..."
+                    bat "docker build -t playwright-tests ."
                 }
             }
         }
 
-        stage('Run Tests in Parallel') {
-            parallel {
-                stage('Google Test') {
-                    steps {
-                        dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                            bat 'npx playwright test google.spec.js --headed'
-                        }
-                    }
+        stage('Run Tests in Docker') {
+            steps {
+                script {
+                    echo "Running tests inside Playwright Docker container..."
+                    bat "docker run --rm -v %cd%\\playwright-report:/app/playwright-report playwright-tests"
                 }
+            }
+        }
 
-                stage('Example Test 2') {
-                    steps {
-                        dir('C:\\Users\\shyam\\OneDrive\\Desktop\\Playwrightpush') {
-                            bat 'npx playwright test example.spec.js --headed'
-                        }
-                    }
-                }
+        stage('Publish Report') {
+            steps {
+                publishHTML(target: [
+                    reportName : 'Playwright Report',
+                    reportDir  : 'playwright-report',
+                    reportFiles: 'index.html'
+                ])
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning up workspace...'
+            echo "Cleaning up workspace..."
             cleanWs()
         }
     }
